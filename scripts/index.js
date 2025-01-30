@@ -20,7 +20,7 @@ const createCard = (cardData, deleteCard) => {
 }
 
 // @todo: Функция удаления карточки
+const deleteCard = evt => evt.target.parentElement.remove();
 
 // @todo: Вывести карточки на страницу
-
-initialCards.forEach(card => cardsContainer.append(createCard(card, () => {})));
+initialCards.forEach(card => cardsContainer.append(createCard(card, deleteCard)));
