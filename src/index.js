@@ -22,6 +22,10 @@ const profileDescriptionInput = editProfileForm.elements['description'];
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
+const addCardForm = document.forms['new-place'];
+const placeNameInput = addCardForm.elements['place-name'];
+const placeImageLinkInput = addCardForm.elements['link'];
+
 const createCard = (cardData, deleteCard, handleImageClick) => {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardTitle = cardElement.querySelector('.card__title');
@@ -120,3 +124,17 @@ function handleEditFormSubmit(evt) {
  }
 
 editProfileForm.addEventListener('submit', handleEditFormSubmit);
+
+// TODO: add onload handling (?)
+function handleAddCardFormSubmit(evt) {
+  evt.preventDefault();
+  const newCardData = {
+    name: placeNameInput.value,
+    link: placeImageLinkInput.value,
+  }
+  cardsContainer.prepend(createCard(newCardData, deleteCard, openImagePopup));
+  addCardForm.reset();
+  closePopups();
+}
+
+addCardForm.addEventListener('submit', handleAddCardFormSubmit);
