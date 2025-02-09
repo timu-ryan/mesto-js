@@ -15,6 +15,13 @@ const captionElementImagePopup = document.querySelector('.popup__caption');
 const editProfileButton = document.querySelector('.profile__edit-button');
 const addCardButton = document.querySelector('.profile__add-button');
 
+const editProfileForm = document.forms['edit-profile'];
+const profileNameInput = editProfileForm.elements['name'];
+const profileDescriptionInput = editProfileForm.elements['description'];
+
+const profileName = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+
 const createCard = (cardData, deleteCard, handleImageClick) => {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardTitle = cardElement.querySelector('.card__title');
@@ -52,6 +59,8 @@ function openAddCardPopup() {
 }
 
 function openEditProfilePopup() {
+  profileNameInput.value = profileName.textContent;
+  profileDescriptionInput.value = profileDescription.textContent;
   openPopup(editProfilePopup);
   addPopupEventListeners();
 }
@@ -102,3 +111,12 @@ function handleClosePopupKeydown(evt) {
 addCardButton.addEventListener('click', openAddCardPopup);
 editProfileButton.addEventListener('click', openEditProfilePopup);
 
+function handleEditFormSubmit(evt) {
+  evt.preventDefault();
+  profileName.textContent = profileNameInput.value;
+  profileDescription.textContent = profileDescriptionInput.value;
+  editProfileForm.reset();
+  closePopups();
+ }
+
+editProfileForm.addEventListener('submit', handleEditFormSubmit);
