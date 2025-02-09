@@ -1,13 +1,21 @@
 import './styles/index.css'; 
 import { initialCards } from './cards'
-// @todo: Темплейт карточки
+
 const cardTemplate = document.querySelector('#card-template').content;
 
-// @todo: DOM узлы
 const cardsContainer = document.querySelector('.places__list');
 
-// @todo: Функция создания карточки
-const createCard = (cardData, deleteCard) => {
+const editProfilePopup = document.querySelector('.popup_type_edit');
+const addCardPopup = document.querySelector('.popup_type_new-card');
+
+const imagePopup = document.querySelector('.popup_type_image');
+const imageElementImagePopup = document.querySelector('.popup__image');
+const captionElementImagePopup = document.querySelector('.popup__caption');
+
+const editProfileButton = document.querySelector('.profile__edit-button');
+const addCardButton = document.querySelector('.profile__add-button');
+
+const createCard = (cardData, deleteCard, handleImageClick) => {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardTitle = cardElement.querySelector('.card__title');
   const cardImage = cardElement.querySelector('.card__image');
@@ -18,11 +26,79 @@ const createCard = (cardData, deleteCard) => {
   cardImage.alt = cardData.name;
   cardDeleteButton.addEventListener('click', deleteCard);
 
+  cardImage.addEventListener('click', function () {
+    handleImageClick(cardData.link, cardData.name);
+  })
+
   return cardElement;
 }
 
-// @todo: Функция удаления карточки
+// TODO: при удалении карточек надо бы удалять и слушатели 
 const deleteCard = evt => evt.target.parentElement.remove();
 
-// @todo: Вывести карточки на страницу
-initialCards.forEach(card => cardsContainer.append(createCard(card, deleteCard)));
+initialCards.forEach(card => cardsContainer.append(createCard(card, deleteCard, openImagePopup)));
+
+function openPopup(popupElement) {
+  popupElement.classList.add('popup_is-opened');
+}
+
+function closePopup(popupElement) {
+  popupElement.classList.remove('popup_is-opened');
+}
+
+function openAddCardPopup() {
+  openPopup(addCardPopup);
+  addPopupEventListeners();
+}
+
+function openEditProfilePopup() {
+  openPopup(editProfilePopup);
+  addPopupEventListeners();
+}
+
+function openImagePopup(imageUrl, caption) {
+  imageElementImagePopup.src = imageUrl;
+  imageElementImagePopup.alt = caption;
+  captionElementImagePopup.textContent = caption;
+
+  openPopup(imagePopup);
+  addPopupEventListeners();
+}
+
+function closePopups() {
+  closePopup(addCardPopup);
+  closePopup(editProfilePopup);
+  closePopup(imagePopup);
+}
+
+function addPopupEventListeners() {
+  window.addEventListener('click', handleClosePopupClick);
+  window.addEventListener('keydown', handleClosePopupKeydown);
+}
+
+function removePopupEventListeners() {
+  window.removeEventListener('click', handleClosePopupClick);
+  window.removeEventListener('keydown', handleClosePopupKeydown);
+}
+
+function handleClosePopupClick(evt) {
+  if (evt.target.classList.contains('popup__close')) {
+    closePopups();
+    removePopupEventListeners();
+  }
+  if (evt.target.classList.contains('popup_is-opened')) {
+    closePopups();
+    removePopupEventListeners();
+  }
+}
+
+function handleClosePopupKeydown(evt) {
+  if (evt.key === 'Escape') {
+    closePopups();
+    removePopupEventListeners();
+  }
+}
+
+addCardButton.addEventListener('click', openAddCardPopup);
+editProfileButton.addEventListener('click', openEditProfilePopup);
+
