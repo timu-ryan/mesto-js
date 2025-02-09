@@ -26,11 +26,12 @@ const addCardForm = document.forms['new-place'];
 const placeNameInput = addCardForm.elements['place-name'];
 const placeImageLinkInput = addCardForm.elements['link'];
 
-const createCard = (cardData, deleteCard, handleImageClick) => {
+const createCard = (cardData, deleteCard, likeCard, handleImageClick) => {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardTitle = cardElement.querySelector('.card__title');
   const cardImage = cardElement.querySelector('.card__image');
   const cardDeleteButton = cardElement.querySelector('.card__delete-button');
+  const cardLikeButton = cardElement.querySelector('.card__like-button');
 
   cardTitle.textContent = cardData.name;
   cardImage.src = cardData.link;
@@ -41,13 +42,19 @@ const createCard = (cardData, deleteCard, handleImageClick) => {
     handleImageClick(cardData.link, cardData.name);
   })
 
+  cardLikeButton.addEventListener('click', likeCard)
+
   return cardElement;
+}
+
+function likeCard(evt) {
+  evt.target.classList.toggle('card__like-button_is-active');
 }
 
 // TODO: при удалении карточек надо бы удалять и слушатели 
 const deleteCard = evt => evt.target.parentElement.remove();
 
-initialCards.forEach(card => cardsContainer.append(createCard(card, deleteCard, openImagePopup)));
+initialCards.forEach(card => cardsContainer.append(createCard(card, deleteCard, likeCard, openImagePopup)));
 
 function openPopup(popupElement) {
   popupElement.classList.add('popup_is-opened');
@@ -132,7 +139,7 @@ function handleAddCardFormSubmit(evt) {
     name: placeNameInput.value,
     link: placeImageLinkInput.value,
   }
-  cardsContainer.prepend(createCard(newCardData, deleteCard, openImagePopup));
+  cardsContainer.prepend(createCard(newCardData, deleteCard, likeCard, openImagePopup));
   addCardForm.reset();
   closePopups();
 }
