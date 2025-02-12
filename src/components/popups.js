@@ -1,18 +1,25 @@
-export const editProfilePopup = document.querySelector('.popup_type_edit');
+const editProfilePopup = document.querySelector('.popup_type_edit');
 const addCardPopup = document.querySelector('.popup_type_new-card');
 
 const imagePopup = document.querySelector('.popup_type_image');
 const imageElementImagePopup = document.querySelector('.popup__image');
 const captionElementImagePopup = document.querySelector('.popup__caption');
 
-export function openPopup(popupElement) {
+const editProfileForm = document.forms['edit-profile'];
+const profileNameInput = editProfileForm.elements['name'];
+const profileDescriptionInput = editProfileForm.elements['description'];
+
+const addCardForm = document.forms['new-place'];
+const placeNameInput = addCardForm.elements['place-name'];
+const placeImageLinkInput = addCardForm.elements['link'];
+
+function openPopup(popupElement) {
   popupElement.classList.add('popup_is-opened');
 }
 
-export function closePopup(popupElement) {
+function closePopup(popupElement) {
   popupElement.classList.remove('popup_is-opened');
 }
-
 
 export function openAddCardPopup() {
   openPopup(addCardPopup);
@@ -28,13 +35,41 @@ export function openImagePopup(imageUrl, caption) {
   addPopupEventListeners();
 }
 
+export function openEditProfilePopup(name, description) {
+  profileNameInput.value = name;
+  profileDescriptionInput.value = description;
+  openPopup(editProfilePopup);
+  addPopupEventListeners();
+}
+
+export function handleEditFormSubmit(evt, profileName, profileDescription) {
+  evt.preventDefault();
+  profileName = profileNameInput.value;
+  profileDescription = profileDescriptionInput.value;
+  editProfileForm.reset();
+  closePopups();
+  return ({ name: profileName, description: profileDescription });
+}
+
+// TODO: add onload handling (?)
+export function handleAddCardFormSubmit(evt) {
+  evt.preventDefault();
+  const newCardData = {
+    name: placeNameInput.value,
+    link: placeImageLinkInput.value,
+  }
+  addCardForm.reset();
+  closePopups();
+  return newCardData;
+}
+
 export function closePopups() {
   closePopup(addCardPopup);
   closePopup(editProfilePopup);
   closePopup(imagePopup);
 }
 
-export function addPopupEventListeners() {
+function addPopupEventListeners() {
   window.addEventListener('click', handleClosePopupClick);
   window.addEventListener('keydown', handleClosePopupKeydown);
 }
