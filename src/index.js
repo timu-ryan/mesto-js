@@ -14,6 +14,11 @@ import {
   handleAddCardFormSubmit,
 } from './components/popups'
 
+import {
+  enableValidation,
+  clearValidation,
+} from './components/validation'
+
 const cardsContainer = document.querySelector('.places__list');
 
 const editProfileForm = document.forms['edit-profile'];
@@ -25,10 +30,27 @@ const profileDescription = document.querySelector('.profile__description');
 
 const addCardForm = document.forms['new-place'];
 
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active',
+};
+
 initialCards.forEach(card => addCardToContainer(cardsContainer, card, deleteCard, likeCard, openImagePopup));
 
-addCardButton.addEventListener('click', openAddCardPopup);
-editProfileButton.addEventListener('click', () => openEditProfilePopup(profileName.textContent, profileDescription.textContent));
+addCardButton.addEventListener('click', () => {
+  openAddCardPopup();
+  clearValidation(addCardForm, validationConfig);
+});
+
+editProfileButton.addEventListener('click', () => {
+  openEditProfilePopup(profileName.textContent, profileDescription.textContent);
+  clearValidation(editProfileForm, validationConfig);
+});
+
 editProfileForm.addEventListener('submit', (e) => {
   const { name, description } = handleEditFormSubmit(e, profileName, profileDescription);
   profileName.textContent = name;
@@ -43,3 +65,5 @@ addCardForm.addEventListener('submit', (e) => {
 function addCardToContainer(cardsContainer, newCardData, deleteCard, likeCard, openImagePopup) {
   cardsContainer.prepend(createCard(newCardData, deleteCard, likeCard, openImagePopup));
 }
+
+enableValidation(validationConfig); 

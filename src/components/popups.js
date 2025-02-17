@@ -11,7 +11,7 @@ const profileDescriptionInput = editProfileForm.elements['description'];
 
 const addCardForm = document.forms['new-place'];
 const placeNameInput = addCardForm.elements['place-name'];
-const placeImageLinkInput = addCardForm.elements['link'];
+const placeImageLinkInput = addCardForm.elements['place-link'];
 
 function openPopup(popupElement) {
   popupElement.classList.add('popup_is-opened');
