@@ -85,3 +85,16 @@ export function updateAvatar(imgLink) {
   })
     .then(res => handleResponseCheck(res))
 }
+
+export function isValidImageUrl(url) {
+  return fetch(url, {
+    method: 'HEAD',
+  })
+    .then(res => {
+      if (!res.ok) {
+        return Promise.reject(`Error: ${res.status}`);
+      }
+      const contentType = res.headers.get("Content-Type");
+      return contentType && contentType.startsWith("image/");
+    })
+}

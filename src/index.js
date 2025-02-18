@@ -81,7 +81,16 @@ editProfileForm.addEventListener('submit', (e) => {
 
 addCardForm.addEventListener('submit', (e) => {
   const cardData = handleAddCardFormSubmit(e);
-  api.addNewCard(cardData.name, cardData.link)
+  api.isValidImageUrl(cardData.link)
+    .then(res => {
+      if (res) {
+        return res;
+      }
+      return Promise.reject(`error: ${res}`);
+    })
+    .then(() => {
+      return api.addNewCard(cardData.name, cardData.link)
+    })
     .then(newCard => {
       newCard.isCurrentUserCard = true;
       newCard.isCurrentUserLiked = false;
@@ -102,7 +111,16 @@ profileImage.addEventListener('click', () => {
 
 updateAvatarForm.addEventListener('submit', (e) => {
   const newAvatarLink = handleUpdateAvatarFormSubmit(e);
-  api.updateAvatar(newAvatarLink)
+  api.isValidImageUrl(newAvatarLink)
+    .then(res => {
+      if (res) {
+        return res;
+      }
+      return Promise.reject(`Error: ${res}`)
+    })
+    .then(() => {
+      return api.updateAvatar(newAvatarLink)
+    })
     .then(newProfile => {
       profileImage.style.backgroundImage = `url("${newAvatarLink}")`;
     })
@@ -167,3 +185,9 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     });
   })
   .catch(err => console.log(err))
+
+
+
+
+api.isValidImageUrl('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnDAwNU_4d1MjmGSdMlbJhYXdaqnd9cWWg7WqrTh-d6G2DxOCmKBncQZ34LvniBPNeR2IZ')
+  .catch(err => console.log(`error: ${err}`))
