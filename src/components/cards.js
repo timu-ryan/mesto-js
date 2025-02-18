@@ -34,24 +34,43 @@ export const createCard = (cardData, deleteCard, likeCard, handleImageClick) => 
   const cardImage = cardElement.querySelector('.card__image');
   const cardDeleteButton = cardElement.querySelector('.card__delete-button');
   const cardLikeButton = cardElement.querySelector('.card__like-button');
+  const cardLikeCount = cardElement.querySelector('.card__like-count');
+
+  cardElement.setAttribute('data-id', cardData._id);
+  cardElement.setAttribute('data-owner-id', cardData.owner._id);
 
   cardTitle.textContent = cardData.name;
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
-  cardDeleteButton.addEventListener('click', deleteCard);
+
+  cardLikeCount.textContent = cardData.likes.length;
+
+  if (cardData.isCurrentUserCard) {
+    cardDeleteButton.addEventListener('click', deleteCard);
+  } else {
+    cardDeleteButton.style.display = 'none';
+  }
 
   cardImage.addEventListener('click', function () {
     handleImageClick(cardData.link, cardData.name);
   })
+
+  if (cardData.isCurrentUserLiked) {
+    cardLikeButton.classList.add('card__like-button_is-active');
+  }
 
   cardLikeButton.addEventListener('click', likeCard)
 
   return cardElement;
 }
 
-export function likeCard(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
+export function likeCardInDOM(buttonElement) {
+  buttonElement.classList.add('card__like-button_is-active');
+}
+
+export function dislikeCardInDOM(buttonElement) {
+  buttonElement.classList.remove('card__like-button_is-active');
 }
 
 // TODO: при удалении карточек надо бы удалять и слушатели 
-export const deleteCard = evt => evt.target.parentElement.remove();
+export const deleteCardFromDOM = cardElement => cardElement.remove();

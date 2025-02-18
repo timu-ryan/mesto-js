@@ -1,5 +1,7 @@
 const editProfilePopup = document.querySelector('.popup_type_edit');
 const addCardPopup = document.querySelector('.popup_type_new-card');
+const updateAvatarPopup = document.querySelector('.popup_type_avatar');
+const deleteConfirmationPopup = document.querySelector('.popup_type_delete-confirmation');
 
 const imagePopup = document.querySelector('.popup_type_image');
 const imageElementImagePopup = document.querySelector('.popup__image');
@@ -12,6 +14,13 @@ const profileDescriptionInput = editProfileForm.elements['description'];
 const addCardForm = document.forms['new-place'];
 const placeNameInput = addCardForm.elements['place-name'];
 const placeImageLinkInput = addCardForm.elements['place-link'];
+
+
+const updateAvatarForm = document.forms['avatar'];
+const avatarLinkInput = updateAvatarForm.elements['avatar-link'];
+
+const deleteConfirmationForm = document.forms['delete-confirmation'];
+const deleteConfirmationSubmitButton = deleteConfirmationForm.querySelector('.button');
 
 function openPopup(popupElement) {
   popupElement.classList.add('popup_is-opened');
@@ -42,6 +51,23 @@ export function openEditProfilePopup(name, description) {
   addPopupEventListeners();
 }
 
+export function openUpdateAvatarPopup(link) {
+  avatarLinkInput.value = link;
+  openPopup(updateAvatarPopup);
+  addPopupEventListeners();
+}
+
+export function openDeleteConfirmationPopup(id) {
+  openPopup(deleteConfirmationPopup);
+  deleteConfirmationSubmitButton.setAttribute('data-card-id', id);
+  addPopupEventListeners();
+}
+
+export function handleDeleteConfirmationFromSubmit(evt, id) {
+  evt.preventDefault();
+  return id;
+}
+
 export function handleEditFormSubmit(evt, profileName, profileDescription) {
   evt.preventDefault();
   profileName = profileNameInput.value;
@@ -63,10 +89,20 @@ export function handleAddCardFormSubmit(evt) {
   return newCardData;
 }
 
+export function handleUpdateAvatarFormSubmit(evt) {
+  evt.preventDefault();
+  const newAvatarLink = avatarLinkInput.value;
+  updateAvatarForm.reset();
+  closePopups();
+  return newAvatarLink;
+}
+
 export function closePopups() {
   closePopup(addCardPopup);
   closePopup(editProfilePopup);
   closePopup(imagePopup);
+  closePopup(updateAvatarPopup);
+  closePopup(deleteConfirmationPopup);
 }
 
 function addPopupEventListeners() {
